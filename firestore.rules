@@ -1,0 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Name normalised for the duplicate check: trimmed, ASCII letters lower-cased
+    // (Security Rules lower() only handles ASCII), '/' escaped because it is not allowed in ids.
+    function norm(s) {
+      return s.trim().lower().replace('/', '%2F');
+    }
+
+    // One recipe per (user, name), letter case ignored: the document id IS this key.
+    function recipeKey(d) {
+      return d.userId + '|' + norm(d.name);
+    }
+
+    function validRecipe(d, id) {
+      return d.keys().hasOnly(['id', 'userId', 'name', 'category', 'difficulty', 'cookTime',
+                               'servings', 'favorite', 'notes', 'createdAt'])
+        && d.keys().hasAll(['userId', 'name', 'category', 'difficulty', 'cookTime'])
+        && d.get('id', id) == id
+        && d.userId is string && d.userId == request.auth.uid
+        && d.name is string && d.name.trim().size() > 0 && d.name.size() <= 80
+        && d.category in ['Breakfast', 'Lunch', 'Dinner', 'Dessert']
+        && d.difficulty in ['Easy', 'Medium', 'Hard']
+        && d.cookTime is int && d.cookTime >= 1 && d.cookTime <= 600
+        && (d.get('servings', null) == null || (d.servings is int && d.servings >= 1 && d.servings <= 20))
+        && d.get('favorite', false) is bool
+        && d.get('notes', '') is string && d.get('notes', '').size() <= 300
+        && d.get('createdAt', request.time) is timestamp
+        && id == recipeKey(d);
+    }
+
+    match /recipes/{recipeId} {
+      // get of a document that does not exist yet (duplicate check when a recipe is renamed)
+      // is only allowed for ids that start with the caller's own uid.
+      allow get: if request.auth != null
+        && (resource == null
+            ? recipeId.split('\\|')[0] == request.auth.uid
+            : resource.data.userId == request.auth.uid);
+
+      allow list: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      allow create: if request.auth != null && validRecipe(request.resource.data, recipeId);
+
+      // userId, createdAt and the name key never change on an update: a rename is a
+      // delete + create under the new key. Re-adding an existing name changes createdAt => refused.
+      allow update: if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && validRecipe(request.resource.data, recipeId)
+        && request.resource.data.get('createdAt', null) == resource.data.get('createdAt', null);
+
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+  }
+}

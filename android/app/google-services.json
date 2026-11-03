@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "133333658639",
+    "project_id": "recipebox-he191111-1520",
+    "storage_bucket": "recipebox-he191111-1520.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133333658639:android:923ce1be7959e67a03c77a",
+        "android_client_info": {
+          "package_name": "com.prm393.bookshelf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5VO6Vz-cvnWJywm9MEVbNf4xyQRoeIyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
