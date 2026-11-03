@@ -1,6 +1,6 @@
-import 'package:bookshelf/logic/recipe.dart';
-import 'package:bookshelf/logic/recipe_filters.dart';
-import 'package:bookshelf/logic/recipe_validators.dart';
+import 'package:recipebox/logic/recipe.dart';
+import 'package:recipebox/logic/recipe_filters.dart';
+import 'package:recipebox/logic/recipe_validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Recipe r(String name, int time, {String c = 'Dinner', String d = 'Easy', bool fav = false, String notes = ''}) =>

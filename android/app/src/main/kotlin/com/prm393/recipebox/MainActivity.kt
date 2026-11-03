@@ -1,4 +1,4 @@
-package com.prm393.bookshelf
+package com.prm393.recipebox
 
 import io.flutter.embedding.android.FlutterActivity
 

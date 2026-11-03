@@ -1,8 +1,8 @@
-import 'package:bookshelf/logic/recipe.dart';
-import 'package:bookshelf/screens/home_screen.dart';
-import 'package:bookshelf/screens/recipe_form.dart';
-import 'package:bookshelf/ui/theme.dart';
-import 'package:bookshelf/ui/widgets.dart';
+import 'package:recipebox/logic/recipe.dart';
+import 'package:recipebox/screens/home_screen.dart';
+import 'package:recipebox/screens/recipe_form.dart';
+import 'package:recipebox/ui/theme.dart';
+import 'package:recipebox/ui/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
